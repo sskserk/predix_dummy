@@ -1,0 +1,8 @@
+---
+applications:
+  - name: user-app
+    buildpack: python_buildpack
+    path: .
+    memory: 128M
+    stack: cflinuxfs2
+    command: python index.py

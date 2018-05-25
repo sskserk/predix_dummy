@@ -1,0 +1,25 @@
+{
+  "messageId": "123456789013456",
+  "body": [
+    {
+      "name": "Sensor-100",
+      "datapoints": [
+        [
+          1453458897222,
+          10001,
+          2
+        ],
+        [
+          1453458897224,
+          20001,
+          2
+        ]
+      ],
+      "attributes": {
+        "host": "server1",
+        "customer": "Acme2"
+      }
+    }
+  ]
+}
+

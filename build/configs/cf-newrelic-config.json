@@ -1,0 +1,12 @@
+ {
+  	"name": "newrelic",
+  	"parameters": {
+  		"licenseKey": "7d29101e14e34e29bdfb6a7eee077ada362884a6"
+  	},
+
+  	"applications": [
+  		"predix-isk-gateway",
+  		"predix-isk-datahandler",
+  		"predix-isk-ui"
+  	]
+ }

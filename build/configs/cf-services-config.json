@@ -1,0 +1,53 @@
+[
+  {
+    "name": "predix-uaa",
+    "plan": "Free",
+    "instance": "predix_uaa",
+    "env": "UAA_NAME",
+    "parameters": {
+      "adminClientSecret": "{cfAdminSecret}"
+    }
+  },
+  {
+    "name": "predix-timeseries",
+    "plan": "Free",
+    "env": "TIMESERIES_NAME",
+    "instance": "predix_timeseries",
+    "parameters": {
+      "trustedIssuerIds": [
+        "{vcapServices['predix-uaa'][0].credentials.issuerId}"
+      ]
+    },
+    "dependencies": [
+      {"name": "predix-uaa"}
+    ],
+    "zones": {
+      "prefix": "timeseries.zones",
+      "suffix": [
+        "user",
+        "query",
+        "ingest"
+      ],
+      "instanceId": "{vcapServices['predix-timeseries'][0].credentials.ingest['zone-http-header-value']}"
+    }
+  },
+   {
+    "name": "predix-asset",
+    "plan": "Free",
+    "env": "ASSET_NAME",
+    "instance": "predix_asset",
+    "parameters": {
+      "trustedIssuerIds": [
+        "{vcapServices['predix-uaa'][0].credentials.issuerId}"
+      ]
+    },
+    "dependencies": [
+      {"name": "predix-uaa"}
+    ],
+    "zones": {
+      "prefix": "predix-asset.zones",
+      "suffix": ["user"],
+      "instanceId": "{vcapServices['predix-asset'][0].credentials.zone['http-header-value']}"
+    }
+  }
+]

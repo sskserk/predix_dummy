@@ -1,0 +1,6 @@
+---
+applications:
+  - name: data-app
+    buildpack: java-buildpack
+    path: target/data.app-1.0.jar
+    memory: 384M

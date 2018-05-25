@@ -1,0 +1,100 @@
+[ 
+  {
+    "name": "predix-isk-gateway",
+    "buildpack": "java_buildpack",
+    "services": [
+      "predix_timeseries",
+      "predix_uaa"
+    ],
+    "path": "target/predix-isk-gateway-1.0.0.jar",
+    "memory": "512MB",
+    "stack": "cflinuxfs2",
+    "env": {
+      "CLIENT_ID": "{uaaClientId}",
+      "CLIENT_SECRET": "{uaaClientPassword}",
+      "CLIENT_BASE64_TOKEN": "{uaaClientBase64Token}",
+      "UAA_URI": "{vcapServices['predix-uaa'][0].credentials.uri}",
+      "UAA_INSTANCE_ID": "{vcapServices['predix-uaa'][0].credentials.zone['http-header-value']}",
+      "TIMESERIES_INGEST_URI": "{vcapServices['predix-timeseries'][0].credentials.ingest.uri}",
+      "TIMESERIES_QUERY_URI": "{vcapServices['predix-timeseries'][0].credentials.query.uri}",
+      "TIMESERIES_INSTANCE_ID": "{vcapServices['predix-timeseries'][0].credentials.ingest['zone-http-header-value']}"
+    }
+  },
+  {
+    "name": "predix-isk-ui",
+    "buildpack": "predix_openresty_buildpack",
+    "services": [
+      "predix_uaa",
+      "predix_timeseries",
+	    "predix_redis"
+    ],
+    "dependencies": [
+      {
+        "name": "predix-isk-gateway",
+        "value": "{uris[0]}",
+        "env": "GATEWAY_URI",
+        "prefix": "https://",
+        "suffix": ""
+      },
+      {
+        "name": "predix-isk-datahandler",
+        "value": "{uris[0]}",
+        "env": "DATA_HANDLER_URI",
+        "prefix": "https://",
+        "suffix": ""
+      }
+
+    ],
+    "path": "dist",
+    "memory": "64M",
+    "stack": "cflinuxfs2",
+    "env": {
+      "CLIENT_ID": "{uaaClientId}",
+      "CLIENT_SECRET": "{uaaClientPassword}",
+      "CLIENT_BASE64_TOKEN": "{uaaClientBase64Token}",
+      "UAA_URI": "{vcapServices['predix-uaa'][0].credentials.uri}",
+      "UAA_INSTANCE_ID": "{vcapServices['predix-uaa'][0].credentials.zone['http-header-value']}",
+      "TIMESERIES_INGEST_URI": "{vcapServices['predix-timeseries'][0].credentials.ingest.uri}",
+      "TIMESERIES_QUERY_URI": "{vcapServices['predix-timeseries'][0].credentials.query.uri}",
+      "TIMESERIES_INSTANCE_ID": "{vcapServices['predix-timeseries'][0].credentials.ingest['zone-http-header-value']}",
+      "REDIS" : "{redis-?}",
+      "ANALYTICS_RUNTIME_URI": "{vcapServices['predix-analytics-runtime'][0].credentials['execution_uri']}",
+      "ANALYTICS_RUNTIME_INSTANCE_ID": "{vcapServices['predix-analytics-runtime'][0].credentials['zone-http-header-value']}",
+      "ANALYTICS_RUNTIME_CONFIG_URI": "{vcapServices['predix-analytics-runtime'][0].credentials['config_uri']}",
+	  "WTS_SESSION": "predix-wts-session"
+    }
+  },
+  {
+    "name": "predix-isk-datahandler",
+    "buildpack": "java_buildpack",
+    "services": [
+      "predix_postgres",
+      "predix_uaa"
+    ],
+    "dependencies": [
+      {
+        "name": "predix-isk-gateway",
+        "value": "{uris[0]}",
+        "env": "GATEWAY_URI",
+        "prefix": "https://",
+        "suffix": ""
+      }
+     ], 
+    "path": "target/predix-isk-datahandler-0.0.1-SNAPSHOT.jar",
+    "memory": "512MB",
+    "instances": "1",
+    "stack": "cflinuxfs2",
+    "env": {
+      "CLIENT_ID": "{uaaClientId}",
+      "CLIENT_SECRET": "{uaaClientPassword}",
+      "CLIENT_BASE64_TOKEN": "{uaaClientBase64Token}",
+      "UAA_URI": "{vcapServices['predix-uaa'][0].credentials.uri}",
+      "UAA_INSTANCE_ID": "{vcapServices['predix-uaa'][0].credentials.zone['http-header-value']}",
+      "ANALYTICS_RUNTIME_URI": "{vcapServices['predix-analytics-runtime'][0].credentials['execution_uri']}",
+      "ANALYTICS_RUNTIME_INSTANCE_ID": "{vcapServices['predix-analytics-runtime'][0].credentials['zone-http-header-value']}",
+      "ANALYTICS_RUNTIME_CONFIG_URI": "{vcapServices['predix-analytics-runtime'][0].credentials['config_uri']}",
+      "ANALYTICS_RUNTIME_SCHEDULER_URI": "{vcapServices['predix-analytics-runtime'][0].credentials['scheduler_uri']}",
+      "DATAHANDLER_SCHEDULER_CRON_EXPRESSION": "1 45 23 * * ?"
+    }
+  }
+]

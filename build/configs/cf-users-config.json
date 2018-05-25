@@ -1,0 +1,26 @@
+{
+	"client": {
+		"client_id": "predix_client",
+		"client_secret": "Pr3@1X2018",
+		"scope": ["uaa.none", "openid"],
+		"authorized_grant_types": ["authorization_code", "client_credentials", "refresh_token", "password"],
+		"authorities": ["uaa.resource"],
+		"autoapprove": ["openid"]
+	},
+	"users": [{
+		"userName": "predix_admin",
+		"password": "Pr3@1X2018",
+		"emails": [{
+			"value": "predix_admin@ge.com"
+		}]
+	}, {
+		"userName": "predix_user",
+		"password": "Pr3@1X2018",
+		"emails": [{
+			"value": "predix_user@ge.com"
+		}]
+	}],
+	"zones": [
+		"uaa.resource"
+	]
+}
